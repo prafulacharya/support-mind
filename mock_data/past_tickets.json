@@ -1,0 +1,72 @@
+[
+  {
+    "id": "TKT-001",
+    "user_id": "user_001",
+    "subject": "Can't login to my account",
+    "issue": "User was locked out after multiple failed login attempts",
+    "resolution": "Account was temporarily locked for security. User was sent a password reset link. After resetting password, they could log in successfully. Verified 2FA setup. Issue resolved in 15 minutes."
+  },
+  {
+    "id": "TKT-002",
+    "user_id": "user_002",
+    "subject": "Payment failed but charge still appeared",
+    "issue": "User was charged twice for a single purchase due to accidental double-click",
+    "resolution": "Identified duplicate transaction in billing system. Confirmed second charge was pending. Initiated refund for duplicate charge. Refund processed within 5 business days. User compensated with $10 credit for inconvenience."
+  },
+  {
+    "id": "TKT-003",
+    "user_id": "user_003",
+    "subject": "Integration with Slack not working",
+    "issue": "Slack integration was set up but notifications weren't coming through",
+    "resolution": "Checked Slack app permissions - were insufficient. Reinstalled Slack app with full permissions. Tested notification delivery with sample tickets. All notifications working correctly now."
+  },
+  {
+    "id": "TKT-004",
+    "user_id": "user_004",
+    "subject": "Export data not available",
+    "issue": "User tried to export their data but got error message about quota exceeded",
+    "resolution": "User had very large dataset. Split export into smaller chunks by date range. Provided instructions for combining CSV files. Export completed successfully. Updated help docs to address large dataset exports."
+  },
+  {
+    "id": "TKT-005",
+    "user_id": "user_005",
+    "subject": "Team member can't access certain documents",
+    "issue": "Recently added team member didn't have permissions to see all documents despite being in the correct group",
+    "resolution": "Found permissions weren't fully propagated. Manually refreshed user permissions in admin panel. Tested access on multiple documents. All permissions now working. Updated permission propagation to be real-time."
+  },
+  {
+    "id": "TKT-006",
+    "user_id": "user_006",
+    "subject": "Slow performance during peak hours",
+    "issue": "Application became very slow between 9-10 PM every evening",
+    "resolution": "Analyzed server logs and found correlation with database backups. Moved backup schedule to off-peak hours. Performance now consistent throughout day. Monitoring continued for 1 week."
+  },
+  {
+    "id": "TKT-007",
+    "user_id": "user_007",
+    "subject": "Need custom integration",
+    "issue": "User wanted to integrate with internal system not on pre-built integration list",
+    "resolution": "Reviewed user's system specifications and API documentation. Guided them through custom API integration using webhooks. Provided code examples and templates. Integration completed successfully. Documentation added for future similar requests."
+  },
+  {
+    "id": "TKT-008",
+    "user_id": "user_008",
+    "subject": "Billing email not received",
+    "issue": "User claims they didn't receive billing notification for upcoming renewal",
+    "resolution": "Checked email delivery logs. Found email was sent but marked as spam due to email filter. Provided instructions to add domain to whitelist. Resent billing email. User confirmed receipt. Updated sender info to reduce spam filtering."
+  },
+  {
+    "id": "TKT-009",
+    "user_id": "user_009",
+    "subject": "Account suspended - please help",
+    "issue": "User's account was suspended due to suspected fraudulent activity",
+    "resolution": "Reviewed account activity patterns. Found unusual IP addresses and locations. Contacted user to verify. User confirmed they had account compromised. Enabled enhanced security, reset tokens, and changed password. Account re-activated after verification."
+  },
+  {
+    "id": "TKT-010",
+    "user_id": "user_010",
+    "subject": "How to set up SSO?",
+    "issue": "Enterprise customer wanted to implement SSO for their team",
+    "resolution": "SSO available on Enterprise plan. Escalated to sales for plan upgrade. Once upgraded, provided SSO setup documentation and API keys. Configured SAML 2.0 with their identity provider. Tested with sample user. Setup complete and 50 team members migrated successfully."
+  }
+]
