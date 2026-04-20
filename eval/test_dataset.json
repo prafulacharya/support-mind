@@ -1,0 +1,82 @@
+[
+  {
+    "question": "How do I reset my password?",
+    "ground_truth": "Go to login page, click 'Forgot Password', enter email, check for reset link in inbox, click link and enter new password"
+  },
+  {
+    "question": "What is your refund policy?",
+    "ground_truth": "30-day money-back guarantee on all plans. Refund requests must be made within 30 days of purchase. Renewals cannot be refunded. Contact support with order ID."
+  },
+  {
+    "question": "How long does standard shipping take?",
+    "ground_truth": "Standard shipping takes 5-7 business days and is free. Express shipping is 2-3 business days for $15. Overnight is 1 business day for $25."
+  },
+  {
+    "question": "Do you offer international shipping?",
+    "ground_truth": "Yes, we ship to over 150 countries. International orders take 10-21 business days. Rates are calculated at checkout based on weight and destination."
+  },
+  {
+    "question": "What payment methods are accepted?",
+    "ground_truth": "We accept credit cards (Visa, Mastercard, American Express), debit cards, PayPal, and bank transfers for annual plans. All processed through Stripe."
+  },
+  {
+    "question": "How do I track my order?",
+    "ground_truth": "Log in to account, go to Order History, click on the order, view tracking number and link. Tracking info appears within 24 hours of purchase."
+  },
+  {
+    "question": "What features come with the Starter plan?",
+    "ground_truth": "Starter plan ($29/month) includes: up to 100 projects, basic analytics, 5 team members, and email support"
+  },
+  {
+    "question": "Can I export my data?",
+    "ground_truth": "Yes, go to Settings > Data & Privacy > Export My Data. Choose format (CSV, JSON, PDF). Export prepared within 24 hours with download link via email."
+  },
+  {
+    "question": "What integrations are supported?",
+    "ground_truth": "Supported integrations include Zapier, Slack, GitHub, Google Workspace, Microsoft Teams, and Salesforce (enterprise only)"
+  },
+  {
+    "question": "Can I change my email address?",
+    "ground_truth": "Yes, go to Settings > Account > Change Email. Enter new email, confirm via links sent to both old and new email addresses."
+  },
+  {
+    "question": "What should I do if my order doesn't arrive?",
+    "ground_truth": "Check tracking info, wait 2-3 additional business days, check with neighbors. Contact support with order ID and tracking number if still not received for investigation or reship."
+  },
+  {
+    "question": "How does the 30-day refund work?",
+    "ground_truth": "Within 30 days of purchase, contact support with order ID and reason for refund. Full refund processed within 5 business days. Renewals not eligible."
+  },
+  {
+    "question": "What do I do if I get an 'Unauthorized' error?",
+    "ground_truth": "This error means you're not logged in. Try logging out and logging back in. If persists, reset password or contact support."
+  },
+  {
+    "question": "Do you offer discounts for annual plans?",
+    "ground_truth": "Yes, annual plans are 20% cheaper than monthly. For example: Monthly $29/month = $348/year, Annual $279/year (save $69). Volume discounts available."
+  },
+  {
+    "question": "How can a non-profit get a discount?",
+    "ground_truth": "Non-profits get 50% off all plans. Contact sales at sales@example.com with proof of non-profit status (501(c)(3) letter or equivalent)"
+  },
+  {
+    "question": "What happens when I upgrade my plan?",
+    "ground_truth": "New features available immediately. Charged prorated amount for remainder of current cycle. Paid period extends by amount of credit."
+  },
+  {
+    "question": "Can I have multiple accounts?",
+    "ground_truth": "Each person can have one active account per email. You can have separate accounts for different email addresses if needed."
+  },
+  {
+    "question": "What should I do if the app is running slowly?",
+    "ground_truth": "Try: clear cache/cookies, use different browser, disable extensions, restart computer, check internet speed. If persists, try different device or contact support."
+  },
+  {
+    "question": "What are the security features?",
+    "ground_truth": "All data encrypted in transit and at rest. GDPR, HIPAA, SOC 2 compliant. Role-based access control. Complete audit logs of all actions."
+  },
+  {
+    "question": "How do I set up an integration with Slack?",
+    "ground_truth": "Go to Settings > Integrations > Slack. Authorize the Slack app with required permissions. Install with full permissions. Test notification delivery. Slack notifications now working."
+  }
+]

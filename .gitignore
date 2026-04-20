@@ -44,14 +44,16 @@ db/*.db
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb
+# But allow evaluation notebooks
+!eval/*.ipynb
 
 # Logs
 *.log
 logs/
 
-# Evaluation outputs
-eval/results/
-eval/*.json
+# Evaluation outputs (but keep test dataset and notebooks)
+# eval/results/
+# eval/*.json (allow test_dataset.json)
 
 # OS
 .DS_Store
