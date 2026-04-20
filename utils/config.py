@@ -9,7 +9,7 @@ class Config:
     """Configuration management for SupportMind."""
     
     # API Keys
-    ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     LANGSMITH_API_KEY: Optional[str] = os.getenv("LANGSMITH_API_KEY")
     LANGSMITH_PROJECT: str = os.getenv("LANGSMITH_PROJECT", "support-mind")
     
@@ -19,7 +19,7 @@ class Config:
     # Models
     EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
     RERANK_MODEL: str = os.getenv("RERANK_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
-    LLM_MODEL: str = os.getenv("LLM_MODEL", "claude-3-5-sonnet-20241022")
+    LLM_MODEL: str = os.getenv("LLM_MODEL", "gemini-2.0-flash")
     
     # Chunking
     CHUNK_SIZE: int = int(os.getenv("CHUNK_SIZE", "512"))
@@ -37,7 +37,7 @@ class Config:
     @staticmethod
     def validate():
         """Validate required configuration."""
-        if not Config.ANTHROPIC_API_KEY:
-            raise ValueError("ANTHROPIC_API_KEY not set in environment")
+        if not Config.GEMINI_API_KEY:
+            raise ValueError("GEMINI_API_KEY not set in environment")
         if Config.TRACE_ENABLED and not Config.LANGSMITH_API_KEY:
             print("Warning: LANGSMITH_API_KEY not set, tracing disabled")

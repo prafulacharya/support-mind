@@ -20,7 +20,7 @@ def main():
         Config.validate()
     except ValueError as e:
         print(f"Configuration Error: {e}")
-        print("Please set ANTHROPIC_API_KEY in .env file")
+        print("Please set GEMINI_API_KEY in .env file")
         return
     
     # Initialize vector DB

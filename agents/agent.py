@@ -4,7 +4,7 @@ import json
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 import re
-import anthropic
+import google.generativeai as genai
 from langgraph.graph import StateGraph, END
 from agents.vector_db import VectorDB
 from agents.memory import ConversationManager
@@ -37,7 +37,8 @@ class SupportAgent:
     def __init__(self, vector_db: VectorDB):
         """Initialize the agent."""
         self.vector_db = vector_db
-        self.client = anthropic.Anthropic(api_key=Config.ANTHROPIC_API_KEY)
+        genai.configure(api_key=Config.GEMINI_API_KEY)
+        self.client = genai.GenerativeModel(Config.LLM_MODEL)
         self.conversation_manager = ConversationManager(vector_db=vector_db)
         self.metrics = TokenMetrics(input_tokens=0, output_tokens=0)
         
@@ -108,24 +109,28 @@ Provide your response in JSON with the following structure:
         return formatted
     
     def call_llm(self, messages: List[Dict[str, str]]) -> tuple[str, int, int]:
-        """Call Claude API and get response."""
+        """Call Gemini API and get response."""
         start_time = time.time()
         
-        response = self.client.messages.create(
-            model=Config.LLM_MODEL,
-            max_tokens=1024,
-            system=self.system_prompt,
-            messages=messages
-        )
+        # Build message history for Gemini
+        full_prompt = self.system_prompt + "\n\n"
+        for msg in messages:
+            if msg["role"] == "user":
+                full_prompt += f"User: {msg['content']}\n\n"
+            else:
+                full_prompt += f"Assistant: {msg['content']}\n\n"
+        
+        response = self.client.generate_content(full_prompt)
         
         latency_ms = (time.time() - start_time) * 1000
         
         # Extract content
-        content = response.content[0].text if response.content else ""
+        content = response.text if response.text else ""
         
-        # Track token usage
-        input_tokens = response.usage.input_tokens
-        output_tokens = response.usage.output_tokens
+        # Gemini doesn't provide token counts directly, estimate them
+        input_tokens = len(full_prompt.split()) // 4  # rough estimate
+        output_tokens = len(content.split()) // 4
+        
         
         logger.debug(f"LLM call completed in {latency_ms:.0f}ms | Tokens: {input_tokens} + {output_tokens}")
         
