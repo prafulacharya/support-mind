@@ -35,8 +35,8 @@ SaaS companies handle hundreds of support queries daily. Manual ticket triage, k
         ┌─────────────────────┼─────────────────────┐
         ▼                     ▼                     ▼
     ┌────────────┐      ┌──────────────┐     ┌──────────────┐
-    │ Vector DB  │      │ LLM Claude   │     │ Tool Calls   │
-    │ (ChromaDB) │      │ Sonnet 3.5   │     │ (Checkers)   │
+    │ Vector DB  │      │ LLM Gemini   │     │ Tool Calls   │
+    │ (ChromaDB) │      │ 2.0 Flash    │     │ (Checkers)   │
     │            │      │              │     │              │
     │ • Docs     │      │ • Reason     │     │ • Check Order│
     │ • FAQs     │      │ • Evaluate   │     │ • Create Tkt │
@@ -230,7 +230,7 @@ if llm_fails:
 
 **Cost Estimation:**
 ```
-Claude Sonnet:
+Google Gemini 2.0 Flash:
   Input: $3/1M tokens
   Output: $15/1M tokens
   
@@ -310,7 +310,7 @@ pip install -r requirements.txt
 ### 2. Set Up Environment
 ```bash
 cp .env.example .env
-# Add your Claude API key
+# Add your Gemini API key
 ```
 
 ### 3. Initialize Vector DB
@@ -483,7 +483,7 @@ Run `python main.py` and try these queries:
 - **RAGAS**: https://github.com/explodinggradients/ragas
 - **ChromaDB**: https://www.trychroma.com/
 - **Sentence Transformers**: https://www.sbert.net/
-- **Claude API**: https://docs.anthropic.com/
+- **Google Gemini API**: https://ai.google.dev/
 
 ---
 
