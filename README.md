@@ -1,16 +1,18 @@
-# SupportMind: Production-Grade Agentic RAG System 🤖
+# SupportMind: Agentic AI Customer Support System 🤖
 
-SupportMind is an advanced, autonomous AI customer support system designed to demonstrate senior-level AI engineering competencies. It goes beyond simple "Chat-over-PDF" tutorials by implementing a robust, self-correcting agentic loop with complex retrieval strategies and quantitative performance evaluation.
+SupportMind is an autonomous AI customer support system that implements a self-correcting agentic loop with advanced retrieval strategies and quantitative performance evaluation.
 
-## 🌟 Why this is "Production-Grade"
+---
 
-Most AI projects stop at basic RAG. SupportMind implements the "last mile" features required for real-world reliability:
+## ✨ Key Features
 
-1.  **Hybrid Search Architecture:** Combines dense vector embeddings (ChromaDB) with keyword-based sparse retrieval (BM25) to handle both semantic questions and specific keyword lookups (like order IDs).
-2.  **Semantic Re-ranking:** Uses a Cross-Encoder model (`ms-marco-MiniLM-L-6-v2`) to re-score retrieved documents, significantly improving context precision over raw vector search.
-3.  **Agentic Tool Orchestration:** The agent isn't just a chatbot; it's a decision-maker. It can choose to search the knowledge base, check order statuses via mock APIs, or create support tickets in a CRM.
-4.  **Self-Evaluation & Escalation:** Implements a confidence-scoring mechanism. If the agent's internal confidence drops below a threshold (80%), it autonomously triggers the `escalate_to_human` fallback to prevent hallucinations.
-5.  **Quantitative Observability (RAGAS):** Includes a dedicated benchmarking suite that evaluates responses based on **Faithfulness**, **Answer Relevancy**, and **Context Recall** using Gemini as an LLM-judge.
+SupportMind provides a robust set of capabilities for autonomous customer support:
+
+1.  **Hybrid Search Architecture:** Combines dense vector embeddings (ChromaDB) with keyword-based sparse retrieval (BM25) for high-accuracy semantic and keyword-based lookup.
+2.  **Semantic Re-ranking:** Integrates a Cross-Encoder model (`ms-marco-MiniLM-L-6-v2`) to re-score documents, ensuring the most relevant context is prioritized.
+3.  **Agentic Tool Orchestration:** An autonomous agent powered by a ReAct loop that can query the knowledge base, identify order statuses via mock APIs, and create CRM tickets.
+4.  **Confidence-Based Escalation:** Features a self-evaluation mechanism that automatically triggers a human-handoff fallback if the agent's confidence falls below the 80% threshold.
+5.  **Automated Evaluation Pipeline:** A built-in benchmarking suite using **RAGAS** to quantify Faithfulness, Answer Relevancy, and Context Recall.
 
 ---
 
@@ -83,8 +85,8 @@ python -m eval.run_eval --limit 5
 
 ---
 
-## 📈 Impact for Hiring Managers
+## 📊 Monitoring & Reliability
 
-*   **Cost Control:** Tracks estimated monthly costs and token usage per turn.
-*   **Reliability:** Demonstrates how to handle hallucinations using threshold-based escalation.
-*   **Optimization:** The RAGAS pipeline proves that the RAG parameters (K-value, re-ranker) were chosen based on data, not guesses.
+*   **Cost & Usage Tracking:** Monitors estimated monthly costs and token consumption per interaction.
+*   **Safety Guardrails:** Prevents hallucinations through confidence-threshold monitoring and automated escalation.
+*   **Data-Driven Optimization:** The evaluation pipeline allows for fine-tuning RAG parameters (K-value, re-ranker) based on quantitative performance metrics.
