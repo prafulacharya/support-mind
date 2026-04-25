@@ -25,6 +25,10 @@ COPY . .
 # Create directory for ChromaDB persistence
 RUN mkdir -p /app/db/chroma_db
 
+# Set API host and port for container environment
+ENV API_HOST=0.0.0.0
+ENV API_PORT=8000
+
 # Expose the API port
 EXPOSE 8000
 

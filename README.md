@@ -80,7 +80,7 @@ python main.py
 ```powershell
 python api.py
 ```
-*Access the interactive API documentation at **http://127.0.0.1:8001/docs***
+*Access the interactive API documentation at **http://127.0.0.1:8000/docs***
 
 **C. Run Performance Benchmarks:**
 ```powershell
