@@ -4,9 +4,10 @@ import json
 from typing import List, Dict, Any
 from dataclasses import dataclass
 from datetime import datetime
-import anthropic
+import google.generativeai as genai
 from utils.logging import logger
 from utils.config import Config
+import re
 
 @dataclass
 class RAGAScores:
@@ -27,18 +28,18 @@ class RAGASEvaluator:
     
     def __init__(self):
         """Initialize evaluator."""
-        self.client = anthropic.Anthropic(api_key=Config.ANTHROPIC_API_KEY)
+        genai.configure(api_key=Config.GEMINI_API_KEY)
+        self.model = genai.GenerativeModel(Config.LLM_MODEL)
         self.results: List[Dict[str, Any]] = []
     
+    def _extract_score(self, text: str) -> float:
+        """Extract a float score from the LLM response."""
+        match = re.search(r'([0-9]?\.[0-9]+|[0-9])', text)
+        if match:
+            return min(1.0, max(0.0, float(match.group(1))))
+        return 0.5
+
     def evaluate_faithfulness(self, answer: str, context: str) -> float:
-        """
-        Evaluate if the answer is faithful to the provided context.
-        
-        Returns score from 0 to 1 where:
-        - 1.0: Answer is completely grounded in context
-        - 0.5: Answer is partially grounded
-        - 0.0: Answer contradicts or ignores context
-        """
         prompt = f"""Evaluate if this answer is faithful to the provided context.
 
 Context:
@@ -49,37 +50,20 @@ Answer:
 
 Faithfulness means the answer is grounded in the context and doesn't introduce information not in the context.
 
-Respond with just a score from 0.0 to 1.0 where:
-- 1.0 = Completely faithful, all claims supported by context
-- 0.75 = Mostly faithful, minor unsupported claims
-- 0.5 = Partially faithful, mix of supported and unsupported claims
-- 0.25 = Mostly unfaithful, mainly unsupported claims
-- 0.0 = Not faithful, contradicts context or hallucinated
+Respond with ONLY a decimal score from 0.0 to 1.0 where:
+1.0 = Completely faithful, all claims supported by context
+0.0 = Not faithful, contradicts context or hallucinated
 
-Score (number only):"""
-        
-        response = self.client.messages.create(
-            model=Config.LLM_MODEL,
-            max_tokens=10,
-            messages=[{"role": "user", "content": prompt}]
-        )
+Score:"""
         
         try:
-            score = float(response.content[0].text.strip())
-            return min(1.0, max(0.0, score))
-        except (ValueError, IndexError):
-            logger.warning("Failed to parse faithfulness score")
+            response = self.model.generate_content(prompt)
+            return self._extract_score(response.text)
+        except Exception as e:
+            logger.warning(f"Failed to score faithfulness: {e}")
             return 0.5
     
     def evaluate_answer_relevancy(self, question: str, answer: str) -> float:
-        """
-        Evaluate if answer is relevant to the question.
-        
-        Returns score from 0 to 1 where:
-        - 1.0: Answer directly addresses the question
-        - 0.5: Answer partially addresses the question
-        - 0.0: Answer is not relevant
-        """
         prompt = f"""Evaluate if this answer is relevant to the question.
 
 Question:
@@ -90,37 +74,20 @@ Answer:
 
 Relevancy means the answer addresses the question asked.
 
-Respond with just a score from 0.0 to 1.0 where:
-- 1.0 = Directly answers the question
-- 0.75 = Mostly relevant with minor tangents
-- 0.5 = Partially relevant
-- 0.25 = Mostly irrelevant
-- 0.0 = Not relevant at all
+Respond with ONLY a decimal score from 0.0 to 1.0 where:
+1.0 = Directly answers the question
+0.0 = Not relevant at all
 
-Score (number only):"""
-        
-        response = self.client.messages.create(
-            model=Config.LLM_MODEL,
-            max_tokens=10,
-            messages=[{"role": "user", "content": prompt}]
-        )
+Score:"""
         
         try:
-            score = float(response.content[0].text.strip())
-            return min(1.0, max(0.0, score))
-        except (ValueError, IndexError):
-            logger.warning("Failed to parse answer relevancy score")
+            response = self.model.generate_content(prompt)
+            return self._extract_score(response.text)
+        except Exception as e:
+            logger.warning(f"Failed to score answer relevancy: {e}")
             return 0.5
     
     def evaluate_context_precision(self, question: str, context: List[str]) -> float:
-        """
-        Evaluate precision of retrieved context.
-        
-        Returns score from 0 to 1 where:
-        - 1.0: All retrieved docs are relevant
-        - 0.5: About half are relevant
-        - 0.0: None are relevant
-        """
         prompt = f"""Evaluate how many of these context pieces are relevant to the question.
 
 Question:
@@ -131,37 +98,20 @@ Context pieces:
 
 Context precision is the fraction of retrieved documents that are relevant to answering the question.
 
-Respond with just a score from 0.0 to 1.0 where:
-- 1.0 = All documents are highly relevant
-- 0.75 = Most documents are relevant
-- 0.5 = About half the documents are relevant
-- 0.25 = Few documents are relevant
-- 0.0 = No documents are relevant
+Respond with ONLY a decimal score from 0.0 to 1.0 where:
+1.0 = All documents are highly relevant
+0.0 = No documents are relevant
 
-Score (number only):"""
-        
-        response = self.client.messages.create(
-            model=Config.LLM_MODEL,
-            max_tokens=10,
-            messages=[{"role": "user", "content": prompt}]
-        )
+Score:"""
         
         try:
-            score = float(response.content[0].text.strip())
-            return min(1.0, max(0.0, score))
-        except (ValueError, IndexError):
-            logger.warning("Failed to parse context precision score")
+            response = self.model.generate_content(prompt)
+            return self._extract_score(response.text)
+        except Exception as e:
+            logger.warning(f"Failed to score context precision: {e}")
             return 0.5
     
     def evaluate_context_recall(self, question: str, context: List[str], ground_truth: str) -> float:
-        """
-        Evaluate if we retrieved all relevant context.
-        
-        Returns score from 0 to 1 where:
-        - 1.0: Retrieved all relevant information
-        - 0.5: Retrieved about half
-        - 0.0: Missed important information
-        """
         prompt = f"""Evaluate if all relevant information was retrieved for this question.
 
 Question:
@@ -175,26 +125,17 @@ What should have been found (ground truth):
 
 Context recall measures whether we retrieved all the relevant information needed to answer the question.
 
-Respond with just a score from 0.0 to 1.0 where:
-- 1.0 = All relevant information was retrieved
-- 0.75 = Most relevant information was retrieved
-- 0.5 = About half the relevant information was retrieved
-- 0.25 = Little relevant information was retrieved
-- 0.0 = No relevant information was retrieved
+Respond with ONLY a decimal score from 0.0 to 1.0 where:
+1.0 = All relevant information was retrieved
+0.0 = No relevant information was retrieved
 
-Score (number only):"""
-        
-        response = self.client.messages.create(
-            model=Config.LLM_MODEL,
-            max_tokens=10,
-            messages=[{"role": "user", "content": prompt}]
-        )
+Score:"""
         
         try:
-            score = float(response.content[0].text.strip())
-            return min(1.0, max(0.0, score))
-        except (ValueError, IndexError):
-            logger.warning("Failed to parse context recall score")
+            response = self.model.generate_content(prompt)
+            return self._extract_score(response.text)
+        except Exception as e:
+            logger.warning(f"Failed to score context recall: {e}")
             return 0.5
     
     def evaluate(self,
@@ -202,24 +143,10 @@ Score (number only):"""
                 answer: str,
                 context: List[str],
                 ground_truth: str = "") -> RAGAScores:
-        """
-        Evaluate a single QA pair comprehensively.
-        
-        Args:
-            question: The question asked
-            answer: The answer provided
-            context: List of context documents retrieved
-            ground_truth: What should have been found
-        
-        Returns:
-            RAGAScores with all metrics
-        """
         logger.info(f"Evaluating: {question[:50]}...")
         
-        # Format context for evaluation
         context_str = "\n---\n".join(context)
         
-        # Calculate each metric
         faithfulness = self.evaluate_faithfulness(answer, context_str)
         answer_relevancy = self.evaluate_answer_relevancy(question, answer)
         context_precision = self.evaluate_context_precision(question, context)
@@ -232,7 +159,6 @@ Score (number only):"""
             context_recall=context_recall
         )
         
-        # Store result
         self.results.append({
             "question": question,
             "answer": answer,
@@ -251,7 +177,6 @@ Score (number only):"""
         return scores
     
     def get_summary(self) -> Dict[str, Any]:
-        """Get summary statistics of all evaluations."""
         if not self.results:
             return {}
         
@@ -272,7 +197,6 @@ Score (number only):"""
         }
     
     def save_results(self, filepath: str) -> None:
-        """Save evaluation results to JSON."""
         summary = self.get_summary()
         with open(filepath, 'w') as f:
             json.dump(summary, f, indent=2)

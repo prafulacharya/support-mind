@@ -23,13 +23,15 @@ class RAGPipeline:
     
     def chunk_document(self, 
                       text: str, 
-                      metadata: Dict[str, Any] = None) -> List[Dict[str, Any]]:
+                      metadata: Dict[str, Any] = None,
+                      doc_index: int = 0) -> List[Dict[str, Any]]:
         """
         Chunk a document into semantic pieces.
         
         Args:
             text: Document text to chunk
             metadata: Metadata to attach to all chunks (source, category, etc.)
+            doc_index: Index of this document in the batch (for unique ID generation)
         
         Returns:
             List of chunks with metadata
@@ -41,13 +43,19 @@ class RAGPipeline:
         chunks_text = self.text_splitter.split_text(text)
         chunks = []
         
+        # Normalize source path: replace backslashes and spaces for safe IDs
+        source = metadata.get('source', 'unknown') if metadata else 'unknown'
+        source_key = source.replace('\\', '/').replace(' ', '_')
+        
         for i, chunk_text in enumerate(chunks_text):
-            chunk_id = f"{metadata.get('source', 'unknown')}_{i}" if metadata else f"chunk_{i}"
+            # Include doc_index so chunks from multiple docs of same source are unique
+            chunk_id = f"{source_key}__doc{doc_index}__chunk{i}"
             
             chunk_metadata = metadata.copy() if metadata else {}
             chunk_metadata.update({
                 "chunk_id": i,
                 "chunk_count": len(chunks_text),
+                "doc_index": doc_index,
             })
             
             chunks.append({
@@ -56,7 +64,7 @@ class RAGPipeline:
                 "metadata": chunk_metadata
             })
         
-        logger.debug(f"Chunked document into {len(chunks)} pieces (source: {metadata.get('source', 'unknown')})")
+        logger.debug(f"Chunked document into {len(chunks)} pieces (source: {source_key}, doc_index: {doc_index})")
         return chunks
     
     def process_documents(self,
@@ -72,11 +80,12 @@ class RAGPipeline:
         """
         all_chunks = []
         
-        for doc in documents:
+        for doc_index, doc in enumerate(documents):
             text = doc.get("text", "")
             metadata = doc.get("metadata", {})
             
-            chunks = self.chunk_document(text, metadata)
+            # Pass doc_index so every chunk across the batch gets a globally unique ID
+            chunks = self.chunk_document(text, metadata, doc_index=doc_index)
             all_chunks.extend(chunks)
         
         logger.info(f"Processed {len(documents)} documents into {len(all_chunks)} chunks")

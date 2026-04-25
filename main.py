@@ -1,6 +1,12 @@
 """Main entry point for SupportMind demo."""
 
 import time
+import sys
+import io
+
+# Force UTF-8 output on Windows to prevent emoji encoding errors
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 from agents.vector_db import VectorDB
 from agents.agent import SupportAgent
 from ingestion.indexer import index_knowledge_base
@@ -24,22 +30,22 @@ def main():
         return
     
     # Initialize vector DB
-    print("📚 Initializing Vector Database...")
+    print("[*] Initializing Vector Database...")
     vector_db = VectorDB()
     stats = vector_db.get_stats()
     
     if stats["document_count"] == 0:
-        print("   ℹ️  No documents found. Indexing knowledge base...")
+        print("   [i] No documents found. Indexing knowledge base...")
         index_knowledge_base()
         stats = vector_db.get_stats()
     
-    print(f"   ✓ Knowledge base loaded: {stats['document_count']} documents")
-    print(f"   ✓ Embedding model: {stats['embedding_model']}\n")
+    print(f"   [OK] Knowledge base loaded: {stats['document_count']} documents")
+    print(f"   [OK] Embedding model: {stats['embedding_model']}\n")
     
     # Initialize agent
-    print("🤖 Initializing Support Agent...")
+    print("[*] Initializing Support Agent...")
     agent = SupportAgent(vector_db)
-    print("   ✓ Agent ready\n")
+    print("   [OK] Agent ready\n")
     
     # Initialize metrics
     metrics_collector = MetricsCollector()
@@ -52,20 +58,20 @@ def main():
     
     while True:
         try:
-            user_input = input("\n👤 You: ").strip()
+            user_input = input("\nYou: ").strip()
             
             if not user_input:
                 continue
             
             if user_input.lower() == "quit":
-                print("\n👋 Thank you for using SupportMind!")
+                print("\nThank you for using SupportMind!")
                 print_final_metrics(metrics_collector)
                 break
             
             if user_input.lower() == "reset":
-                print("🔄 Resetting conversation...")
+                print("[~] Resetting conversation...")
                 agent.reset_conversation()
-                print("✓ Conversation reset. Starting fresh.\n")
+                print("[OK] Conversation reset. Starting fresh.\n")
                 continue
             
             if user_input.lower() == "help":
@@ -77,7 +83,7 @@ def main():
                 continue
             
             # Process query
-            print("\n⏳ Processing your query...")
+            print("\n[...] Processing your query...")
             start_time = time.time()
             
             result = agent.process_query(user_input)
@@ -86,11 +92,11 @@ def main():
             query_count += 1
             
             # Display response
-            print(f"\n🤖 Agent: {result['response']}\n")
+            print(f"\nAgent: {result['response']}\n")
             
             # Display metrics
             if result.get("escalated"):
-                print("⚠️  [Escalated to human support]")
+                print("[!] [Escalated to human support]")
             else:
                 confidence_percent = result.get("confidence", 0) * 100
                 confidence_bar = create_confidence_bar(confidence_percent)
@@ -100,7 +106,7 @@ def main():
             print(f"   Tokens used: {result.get('tokens_used', 0)}")
             print(f"   Latency: {latency:.2f}s")
             
-            # Collect metrics (mock token counts for demo)
+            # Collect metrics
             token_metrics = TokenMetrics(
                 input_tokens=result.get('tokens_used', 100),
                 output_tokens=result.get('tokens_used', 50) // 2
@@ -117,12 +123,12 @@ def main():
             print("-" * 70)
         
         except KeyboardInterrupt:
-            print("\n\n👋 Interrupted. Thank you for using SupportMind!")
+            print("\n\nInterrupted. Thank you for using SupportMind!")
             print_final_metrics(metrics_collector)
             break
         except Exception as e:
             logger.error(f"Error processing query: {e}")
-            print(f"\n❌ Error: {str(e)}")
+            print(f"\n[ERROR]: {str(e)}")
             print("Please try again or type 'quit' to exit.\n")
 
 def print_help():
@@ -142,7 +148,7 @@ def print_conversation_history(agent: SupportAgent):
     print("Conversation History:")
     print("="*70)
     for i, msg in enumerate(history, 1):
-        role = "👤 You" if msg["role"] == "user" else "🤖 Agent"
+        role = "You" if msg["role"] == "user" else "Agent"
         print(f"\n[{i}] {role}:")
         print(f"    {msg['content'][:100]}{'...' if len(msg['content']) > 100 else ''}")
     print("\n" + "="*70 + "\n")
@@ -151,7 +157,7 @@ def create_confidence_bar(confidence_percent: float) -> str:
     """Create a visual confidence bar."""
     filled = int(confidence_percent / 10)
     empty = 10 - filled
-    return f"[{'█' * filled}{'░' * empty}]"
+    return f"[{'#' * filled}{'.' * empty}]"
 
 def print_final_metrics(metrics_collector: MetricsCollector):
     """Print final statistics."""
