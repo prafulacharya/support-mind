@@ -1,8 +1,10 @@
 """Vector Database operations using ChromaDB."""
 
 import chromadb
+from chromadb.config import Settings
 from typing import List, Dict, Any, Optional, Tuple
 import numpy as np
+import google.generativeai as genai
 from sentence_transformers import SentenceTransformer
 from rank_bm25 import BM25Okapi
 from utils.config import Config
@@ -13,7 +15,10 @@ class VectorDB:
     
     def __init__(self, collection_name: str = "support-knowledge"):
         """Initialize ChromaDB and embedding model."""
-        self.client = chromadb.PersistentClient(path=Config.CHROMA_DB_PATH)
+        self.client = chromadb.PersistentClient(
+            path=Config.CHROMA_DB_PATH,
+            settings=Settings(anonymized_telemetry=False)
+        )
         self.collection = self.client.get_or_create_collection(
             name=collection_name,
             metadata={"hnsw:space": "cosine"}
@@ -21,7 +26,7 @@ class VectorDB:
         
         # Initialize embedding model
         self.embedding_model = SentenceTransformer(Config.EMBEDDING_MODEL)
-        self.embedding_dim = self.embedding_model.get_sentence_embedding_dimension()
+        self.embedding_dim = self.embedding_model.get_embedding_dimension()
         
         # BM25 for keyword search (will be built when indexing)
         self.bm25_texts: List[str] = []

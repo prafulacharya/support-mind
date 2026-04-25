@@ -70,18 +70,39 @@ cp .env.example .env
 *Add your `GEMINI_API_KEY` to the `.env` file.*
 
 ### 3. Running the System
-**A. First-time Ingestion:**
-The system will automatically index `/mock_data` on the first run of `main.py`.
 
-**B. Launch the Agent:**
+**A. Interactive CLI (For Testing):**
 ```powershell
 python main.py
 ```
+
+**B. API Service (For Integration):**
+```powershell
+python api.py
+```
+*Access the interactive API documentation at **http://127.0.0.1:8001/docs***
 
 **C. Run Performance Benchmarks:**
 ```powershell
 python -m eval.run_eval --limit 5
 ```
+
+---
+
+## 🐳 Containerization (Docker)
+
+To deploy the system as a portable microservice:
+
+1. **Build the Image:**
+```powershell
+docker build -t support-mind-agent .
+```
+
+2. **Run the Container:**
+```powershell
+docker run -p 8080:8001 --env-file .env support-mind-agent
+```
+The API will be available at `http://localhost:8080/docs`.
 
 ---
 

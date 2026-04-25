@@ -3,6 +3,10 @@
 import time
 import sys
 import io
+import warnings
+
+# Suppress deprecation and future warnings for a cleaner output
+warnings.simplefilter('ignore', FutureWarning)
 
 # Force UTF-8 output on Windows to prevent emoji encoding errors
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')

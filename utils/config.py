@@ -19,7 +19,7 @@ class Config:
     # Models
     EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
     RERANK_MODEL: str = os.getenv("RERANK_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
-    LLM_MODEL: str = os.getenv("LLM_MODEL", "gemini-2.0-flash")
+    LLM_MODEL: str = os.getenv("LLM_MODEL", "gemini-1.5-flash")
     
     # Chunking
     CHUNK_SIZE: int = int(os.getenv("CHUNK_SIZE", "512"))

@@ -1,7 +1,7 @@
 """Tool definitions for the support agent."""
 
 import json
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
 import random
 from pydantic import BaseModel, Field
@@ -15,8 +15,8 @@ class CheckOrderOutput(BaseModel):
     success: bool
     order_id: str
     status: str
-    estimated_delivery: str
-    tracking_number: str
+    estimated_delivery: Optional[str] = None
+    tracking_number: Optional[str] = None
     items: List[str]
 
 class CreateTicketInput(BaseModel):
@@ -103,8 +103,8 @@ def check_order_status(order_id: str) -> CheckOrderOutput:
             success=True,
             order_id=order_id,
             status=order["status"],
-            estimated_delivery=order.get("delivery_date", "Unknown"),
-            tracking_number=order.get("tracking", "Not yet available"),
+            estimated_delivery=order.get("delivery_date") or "TBA",
+            tracking_number=order.get("tracking") or "Pending",
             items=order["items"]
         )
     else:
