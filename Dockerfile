@@ -1,4 +1,4 @@
-# Use Python 3.11/12/13 slim image for a smaller footprint
+# Use Python 3.11 slim image
 FROM python:3.11-slim
 
 # Set environment variables
@@ -9,13 +9,16 @@ ENV APP_HOME=/app
 # Set work directory
 WORKDIR $APP_HOME
 
-# Install system dependencies (needed for some Python packages like ChromaDB/pydantic)
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Install CPU-only versions of ML libraries to save ~7GB of space
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+
+# Install remaining Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -29,10 +32,8 @@ RUN mkdir -p /app/db/chroma_db
 ENV API_HOST=0.0.0.0
 ENV API_PORT=8000
 
-
 # Expose the API port
 EXPOSE 8000
 
 # Command to run the application
-# We use uvicorn to serve the FastAPI app
 CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
