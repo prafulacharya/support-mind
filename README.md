@@ -1,10 +1,10 @@
-# SupportMind: Agentic AI Customer Support System 🤖
+# SupportMind: Agentic AI Customer Support System
 
 SupportMind is an autonomous AI customer support system that implements a self-correcting agentic loop with advanced retrieval strategies and quantitative performance evaluation.
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 SupportMind provides a robust set of capabilities for autonomous customer support:
 
@@ -16,10 +16,10 @@ SupportMind provides a robust set of capabilities for autonomous customer suppor
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 *   **Core Logic:** Python 3.13+
-*   **LLM Provider:** Google Gemini (2.0-Flash)
+*   **LLM Provider:** Google Gemini (1.5-Flash / 2.5-Flash-Lite)
 *   **Orchestration:** Custom ReAct Agent Loop
 *   **Vector Store:** ChromaDB (Local Persisted)
 *   **Embeddings:** `all-MiniLM-L6-v2` (Sentence-Transformers)
@@ -29,7 +29,7 @@ SupportMind provides a robust set of capabilities for autonomous customer suppor
 
 ---
 
-## 🏗️ Project Architecture
+## Project Architecture
 
 ```text
 support-mind/
@@ -50,7 +50,7 @@ support-mind/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Installation
 ```powershell
@@ -89,7 +89,7 @@ python -m eval.run_eval --limit 5
 
 ---
 
-## 🐳 Containerization (Docker)
+## Containerization (Docker)
 
 To deploy the system as a portable microservice:
 
@@ -100,13 +100,13 @@ docker build -t support-mind-agent .
 
 2. **Run the Container:**
 ```powershell
-docker run -p 8080:8001 --env-file .env support-mind-agent
+docker run -p 8080:8000 --env-file .env support-mind-agent
 ```
 The API will be available at `http://localhost:8080/docs`.
 
 ---
 
-## 📊 Monitoring & Reliability
+## Monitoring & Reliability
 
 *   **Cost & Usage Tracking:** Monitors estimated monthly costs and token consumption per interaction.
 *   **Safety Guardrails:** Prevents hallucinations through confidence-threshold monitoring and automated escalation.

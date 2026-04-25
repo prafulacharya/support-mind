@@ -22,7 +22,7 @@ def log_retrieval(query: str, documents: list, scores: list) -> None:
 def log_agent_action(thought: str, action: str, tool: str, input_data: Dict[str, Any]) -> None:
     """Log agent thinking and actions."""
     logger.info(f"[THOUGHT] {thought}")
-    logger.info(f"[ACTION] {action} → Tool: {tool}")
+    logger.info(f"[ACTION] {action} -> Tool: {tool}")
     logger.debug(f"[INPUT] {json.dumps(input_data, indent=2)}")
 
 def log_agent_observation(observation: Any) -> None:

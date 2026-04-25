@@ -57,12 +57,12 @@ You'll see:
 Welcome to SupportMind - Agentic AI Customer Support System
 ======================================================================
 
-📚 Initializing Vector Database...
-   ✓ Knowledge base loaded: 25 documents
-   ✓ Embedding model: all-MiniLM-L6-v2
+[*] Initializing Vector Database...
+   [OK] Knowledge base loaded: 25 documents
+   [OK] Embedding model: all-MiniLM-L6-v2
 
-🤖 Initializing Support Agent...
-   ✓ Agent ready
+Initializing Support Agent...
+   [OK] Agent ready
 
 Type 'quit' to exit, 'reset' to start new conversation, 'help' for commands
 ```
@@ -425,4 +425,4 @@ If LANGSMITH_API_KEY is set:
 
 ---
 
-**You're ready to deploy! 🚀**
+**You're ready to deploy!**

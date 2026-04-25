@@ -13,7 +13,7 @@ This document explains the architectural choices made in SupportMind and the eng
 **Decision: 512-token chunks with 50% overlap**
 
 #### Rationale:
-- **Token count**: 512 tokens ≈ 350-400 words, fits naturally in context windows
+- **Token count**: 512 tokens (around 350-400 words), fits naturally in context windows
   - Too small (<256): Context breaks mid-sentence, semantic loss
   - Too large (>1024): Expensive embedding computation, retrieval becomes noisy
   - 512 is "Goldilocks zone" for most models and hardware
@@ -65,7 +65,7 @@ Retrieved:
 Retrieval WITH reranking:
 Query: "How do I reset my password?"
 Retrieved top-100, then rerank:
-  1. FAQ on password reset - rerank: 0.95 ✓
+  1. FAQ on password reset - rerank: 0.95 OK
   2. FAQ on account security - rerank: 0.42
   3. FAQ on email change - rerank: 0.38
 → Top results have huge margin, much cleaner
@@ -96,7 +96,7 @@ Retrieved top-100, then rerank:
   - Fast (O(n) in doc count)
 
 - **Semantic** search excels at:
-  - Synonym matching ("reset password" ≈ "change password")
+  - Synonym matching ("reset password" ~ "change password")
   - Paraphrase matching (different wording, same meaning)
   - Low false positives (rarely retrieves irrelevant docs)
 
@@ -181,8 +181,8 @@ Without LangGraph, this would be hard-coded if/else logic. With LangGraph, it's 
 | Deployment | Local + cloud | Cloud-only | Self-hosted |
 | Cost | Free (local) | $$$$ | $$ |
 | Setup | 1 line | Sign up | 30 min docker |
-| Metadata filtering | ✓ | ✓ | ✓ |
-| Hybrid search | ✓ | ✓ | ✓ |
+| Metadata filtering | OK | OK | OK |
+| Hybrid search | OK | OK | OK |
 | Best for | Dev/demo/small | Large scale | Enterprise |
 
 **Decision: ChromaDB for development**
@@ -235,7 +235,7 @@ User: "Can you help me now?"
 **Why 5 turns?**
 - Enough context for agent to understand multi-turn flow
 - Not so much that it fills the entire prompt
-- 5 turns ≈ 2000-3000 tokens for context
+- 5 turns (around 2000-3000 tokens) for context
 
 **When to trigger summarization:**
 - After 10 turns, create long-term memory entry
@@ -353,8 +353,8 @@ escalate_to_human(reason="System unavailable")
 
 ### Cost Optimization
 - Claude Sonnet: $3/1M input, $15/1M output
-- Typical query: 2000 input + 500 output = ~$0.000015
-- 1000 queries/day: ~$0.45/month (negligible)
+- Typical query: 2000 input + 500 output = (around) $0.000015
+- 1000 queries/day: (around) $0.45/month (negligible)
 - But still worth monitoring:
   - Reduce context size if tokens grow
   - Use cheaper model for simple queries

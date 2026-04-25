@@ -70,7 +70,7 @@ class VectorDB:
                 self.bm25_texts.append(doc["text"])
                 self.bm25_ids.append(doc["id"])
             
-            # Add to ChromaDB — convert each numpy array to a Python list
+            # Add to ChromaDB - convert each numpy array to a Python list
             embeddings_list = [
                 emb.tolist() if isinstance(emb, np.ndarray) else emb
                 for emb in embeddings
